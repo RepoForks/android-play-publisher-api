@@ -1,9 +1,13 @@
-.project
-.metadata
-bin/**
-libs/**
-src/resources/*.apk
-src/resources/*.bak
+.gradle
+.idea
+build
 local.properties
-.classpath
-.settings/
+*.iml
+*.tmp
+*.log
+*.bak
+*.class
+*~
+
+# files from device
+traces.txt
