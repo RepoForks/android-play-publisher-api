@@ -8,6 +8,3 @@ local.properties
 *.bak
 *.class
 *~
-
-# files from device
-traces.txt
