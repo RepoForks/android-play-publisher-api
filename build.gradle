@@ -1,5 +1,8 @@
 apply plugin: "java"
+apply plugin: "application"
 
 dependencies {
     compile fileTree(dir: "libs", include: ["*.jar"])
 }
+
+mainClassName = "com.google.play.developerapi.samples.$MAIN_CLASS_SIMPLE_NAME"

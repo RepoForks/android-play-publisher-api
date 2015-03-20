@@ -16,47 +16,61 @@
 
 package com.google.play.developerapi.samples;
 
-/**
- * Contains global application configuration, which is required by all samples.
- */
-public final class ApplicationConfig {
+import org.apache.commons.cli.*;
 
-    private ApplicationConfig() {
-        // no instance
+public class ApplicationConfig {
+    public final String appName;
+    public final String appId;
+    public final String account;
+    public final String secrets;
+    public final String apkFilePath;
+
+    public ApplicationConfig(CommandLine cmd) {
+        appName = cmd.getOptionValue("appName");
+        appId = cmd.getOptionValue("appId");
+        account = cmd.getOptionValue("account");
+        secrets = cmd.getOptionValue("secrets");
+        apkFilePath = cmd.getOptionValue("apkFilePath");
     }
 
-    /**
-     * Specify the name of your application. If the application name is
-     * {@code null} or blank, the application will log a warning. Suggested
-     * format is "MyCompany-Application/1.0".
-     */
-    static final String APPLICATION_NAME = "";
+    public static ApplicationConfig parseArgs(String[] args) {
+        Options options = new Options();
 
-    /**
-     * Specify the package name of the app.
-     */
-    static final String PACKAGE_NAME = "";
+        try {
+            CommandLineParser parser = new GnuParser();
 
-    /**
-     * Authentication.
-     * <p>
-     * Installed application: Leave this string empty and copy or
-     * edit resources/client_secrets.json.
-     * </p>
-     * <p>
-     * Service accounts: Enter the service
-     * account email and add your key.p12 file to the resources directory.
-     * </p>
-     */
-    static final String SERVICE_ACCOUNT_EMAIL = "";
+            Option appId = new Option("appId", "Application id (package name)");
+            appId.setArgs(1);
+            appId.setRequired(true);
+            options.addOption(appId);
 
-    /**
-     * Specify the apk file path of the apk to upload, i.e. /resources/your_apk.apk
-     * <p>
-     * This needs to be set for running {@link BasicUploadApk} and {@link UploadApkWithListing}
-     * samples.
-     * </p>
-     */
-    public static final String APK_FILE_PATH = "";
+            Option secrets = new Option("secrets", "Client secrets path");
+            secrets.setArgs(1);
+            secrets.setRequired(true);
+            options.addOption(secrets);
 
+            Option account = new Option("account", "Service account email");
+            account.setArgs(1);
+            account.setRequired(false);
+            options.addOption(account);
+
+            Option appName = new Option("appName", "Application name");
+            appName.setArgs(1);
+            appName.setRequired(false);
+            options.addOption(appName);
+
+            Option apkFilePath = new Option("apkFilePath", "Apk file path");
+            apkFilePath.setArgs(1);
+            apkFilePath.setRequired(false);
+            options.addOption(apkFilePath);
+
+            return new ApplicationConfig(parser.parse(options, args));
+        } catch (ParseException ex) {
+            System.err.println(ex.getMessage());
+
+            HelpFormatter formatter = new HelpFormatter();
+            formatter.printHelp("android-publisher-api", options);
+            return null;
+        }
+    }
 }
